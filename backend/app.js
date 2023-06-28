@@ -6,7 +6,9 @@ const sequelize=require('./util/database');
 const UserRoutes=require('./router/userroutes');
 
 app.use(bodyPaer.json());
-app.use(cors());
+app.use(cors({
+   origin:"*"
+}));
 
 app.use('/user',UserRoutes);
 

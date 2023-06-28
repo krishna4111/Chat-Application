@@ -1,5 +1,6 @@
 const User=require('../model/user');
 const bcrypt=require('bcrypt');
+const jwt=require('jsonwebtoken');
 
 function isStringValid(string) {
     if (string == undefined || string.length == 0) {
@@ -39,6 +40,41 @@ catch(err){
 }
 }
 
+
+function generateAccessToken( id ){
+  return jwt.sign({userId:id},"secrectkey");
+}
+
+
+const login=async (req,res)=>{
+  try{
+  const{email,password}=req.body;
+
+  const user= await User.findOne({where:{email}});
+  if(user){
+    bcrypt.compare(password , user.password , (err,result)=>{
+      if(result === true){
+       return res.status(200).json({success:true, message:"user logged in successfully" , token:generateAccessToken(user.id)})
+      }
+      else{
+        return res.status(400).json({success:false , message:"wrong password"})
+      
+      }
+    })
+  }
+ else{
+  return res.status(404).json({success:false,message:"user dosenot exists"})
+ }
+
+
+  }
+  catch(err){
+    console.log(err);
+    res.status(500).json({message:err})
+  }
+}
+
 module.exports={
-    signup
+    signup,
+    login
   }

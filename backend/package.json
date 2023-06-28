@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/krishna4111/Chat-Application/issues"
   },
-  "homepage": "https://github.com/krishna4111/Chat-Application#readme"
+  "homepage": "https://github.com/krishna4111/Chat-Application#readme",
+  "dependencies": {
+    "jsonwebtoken": "^9.0.0"
+  }
 }

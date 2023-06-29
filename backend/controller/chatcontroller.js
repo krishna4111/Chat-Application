@@ -8,7 +8,7 @@ const sendMessage=async (req,res)=>{
     try{
        const{msg}=req.body;
        await Chat.create({msg , userId:req.user.id})
-       res.status(200).json({success:true , name:req.user.name , msg:msg});
+       res.status(200).json({success:true , msg:msg ,userId:req.user.id});
        await t.commit();
     }
     catch(err){

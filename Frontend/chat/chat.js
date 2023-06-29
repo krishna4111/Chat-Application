@@ -7,6 +7,7 @@ async function sendMessage(){
         }
       const response=  await axios.post('http://localhost:3000/chat/sendmessage',obj, {headers:{'Authorization' : token}});
       showMessageOnScreen(response.data)
+      document.getElementById('msg-bar').value = "";
      // location.reload();
     }
     catch(err){
@@ -18,14 +19,19 @@ async function sendMessage(){
 
 
 
-addEventListener("DOMContentLoaded" , async () =>{
+
+
+
+//const interval = setInterval(refresh, 1000);
+addEventListener("DOMContentLoaded" ,async function refresh(){
     try{
       const token=localStorage.getItem('token');
       
     const response=  await axios.get("http://localhost:3000/chat/show-all",{headers:{'Authorization':token}});
- 
+    
     response.data.msg.forEach(ele=>{
-        showMessageOnScreen(ele)
+        //document.getElementById('msg-bar').value = "";
+        showMessageOnScreen(ele);
     })
     }
     catch(err){

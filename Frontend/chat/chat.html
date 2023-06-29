@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 100vh;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .message-container {
+            margin-bottom: 10px;
+        }
+
+        .message {
+            background-color: #f2f2f2;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .input-field {
+            flex: 1;
+            margin-right: 10px;
+            height:25px;
+        }
+
+        .send-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;" >Chat App</h1>
+    <div class="container">
+        <div class="message-container">
+            <div class="message">Hello, how are you?</div>
+            <div class="message">I'm good, thanks!</div>
+            <div class="message">What about you?</div>
+        </div>
+        <div class="input-container">
+            <input class="input-field" type="text" placeholder="Type your message">
+            <button class="send-button">Send</button>
+        </div>
+    </div>
+    <script src="../chat/chat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
+
+</body>
+</html>

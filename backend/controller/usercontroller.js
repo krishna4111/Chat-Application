@@ -2,6 +2,7 @@ const User=require('../model/user');
 const bcrypt=require('bcrypt');
 const jwt=require('jsonwebtoken');
 
+
 function isStringValid(string) {
     if (string == undefined || string.length == 0) {
       return true;
@@ -47,6 +48,7 @@ function generateAccessToken( id ){
 
 
 const login=async (req,res)=>{
+  
   try{
   const{email,password}=req.body;
 
@@ -54,7 +56,7 @@ const login=async (req,res)=>{
   if(user){
     bcrypt.compare(password , user.password , (err,result)=>{
       if(result === true){
-       return res.status(200).json({success:true, message:"user logged in successfully" , token:generateAccessToken(user.id)})
+       return res.status(200).json({success:true, message:"user logged in successfully" , token:generateAccessToken(user.id)},{transaction:t})
       }
       else{
         return res.status(400).json({success:false , message:"wrong password"})

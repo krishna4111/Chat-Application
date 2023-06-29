@@ -6,5 +6,6 @@ const middleware=require('../middleware/auth')
 
 
 router.post('/sendmessage',middleware.authentication,ChatController.sendMessage);
+router.get('/show-all',middleware.authentication,ChatController.showAllChat);
 
 module.exports=router;

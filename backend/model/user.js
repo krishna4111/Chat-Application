@@ -2,7 +2,7 @@ const Sequelize=require('sequelize');
 
 const sequelize=require('../util/database');
 
-const users=sequelize.define( 'chat' ,{
+const users=sequelize.define( 'user' ,{
     id:{
         type:Sequelize.INTEGER,
         allowNull:false,

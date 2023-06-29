@@ -56,14 +56,12 @@
 <body>
     <h1 style="text-align: center;" >Chat App</h1>
     <div class="container">
-        <div class="message-container">
-            <div class="message">Hello, how are you?</div>
-            <div class="message">I'm good, thanks!</div>
-            <div class="message">What about you?</div>
+        <div class="message-container" id="show-msg">
+            
         </div>
         <div class="input-container">
-            <input class="input-field" type="text" placeholder="Type your message">
-            <button class="send-button">Send</button>
+            <input id="msg-bar" class="input-field" type="text" placeholder="Type your message">
+            <button onclick="sendMessage()" class="send-button">Send</button>
         </div>
     </div>
     <script src="../chat/chat.js"></script>

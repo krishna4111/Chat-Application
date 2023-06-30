@@ -42,8 +42,8 @@ catch(err){
 }
 
 
-function generateAccessToken( id ){
-  return jwt.sign({userId:id},"secrectkey");
+function generateAccessToken( id ,name ){
+  return jwt.sign({userId:id,userName:name},"secrectkey");
 }
 
 
@@ -56,7 +56,7 @@ const login=async (req,res)=>{
   if(user){
     bcrypt.compare(password , user.password , (err,result)=>{
       if(result === true){
-       return res.status(200).json({success:true, message:"user logged in successfully" , token:generateAccessToken(user.id)},{transaction:t})
+       return res.status(200).json({success:true, message:"user logged in successfully" , token:generateAccessToken(user.id,user.name)})
       }
       else{
         return res.status(400).json({success:false , message:"wrong password"})

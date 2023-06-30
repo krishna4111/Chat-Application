@@ -7,8 +7,8 @@ const sendMessage=async (req,res)=>{
     const t = await sequelize.transaction();
     try{
        const{msg}=req.body;
-       await Chat.create({msg , userId:req.user.id})
-       res.status(200).json({success:true , msg:msg ,userId:req.user.id});
+      const chatDetails= await Chat.create({msg ,username:req.user.name, userId:req.user.id})
+       res.status(200).json({success:true , chatDetails});
        await t.commit();
     }
     catch(err){
@@ -23,7 +23,7 @@ const sendMessage=async (req,res)=>{
 const showAllChat=async (req,res)=>{
     try{
        const chat=await Chat.findAll();
-       res.status(200).json({msg:chat});
+       res.status(200).json({chat});
     //    chat.forEach(async (element)=> {
     //     const user=await User.findByPk(element.userId);
     //     //res.status(200).json({name:user.name ,mag:element});

@@ -38,20 +38,17 @@ function parseJwt (token) {
 //const interval = setInterval(location.reload(), 60000);
 
 addEventListener("DOMContentLoaded" ,async ()=>{
- const intervalId = setInterval(async () =>{
+ //const intervalId = setInterval(async () =>{
     const token=localStorage.getItem('token');
     const decodejwtToken=parseJwt(token);
-    console.log('decodejwtToken',decodejwtToken)
     
     
   const response=  await axios.get("http://localhost:3000/chat/show-all",{headers:{'Authorization':token}});
-  console.log('show all' ,response.data.chat);
+
   
   let array=new Array();
   if(response.data.chat.length > 10){
     let n=response.data.chat.length-1;
-    console.log(response.data.chat.length)
-    console.log(response.data.chat[n])
     while(array.length <10){
       array.push(response.data.chat[n]);
       n--;
@@ -62,7 +59,6 @@ addEventListener("DOMContentLoaded" ,async ()=>{
   }
 
   array=array.reverse();
-  console.log( "array",array);
   localStorage.setItem('chatArray' , JSON.stringify(array));
 
   let chat=JSON.parse(localStorage.getItem('chatArray'))
@@ -74,8 +70,19 @@ addEventListener("DOMContentLoaded" ,async ()=>{
   }
   showMessageOnScreen(ele);
   })
+  
+  const dropdown=document.getElementById('groups');
+  dropdown.innerHTML='<option value="">SelectGroup</option>';
+  const groups =  await axios.get('http://localhost:3000/chat/show-all-group' ,{headers:{'Authorization':token}})
 
-  },2000)
+  groups.data.groups.forEach(group=>{
+    const option =document.createElement('option');
+    option.value = group.groupname;
+    option.textContent=group.groupname;
+    dropdown.appendChild(option);
+  })
+
+ // },2000)
  
  //clearInterval(intervalId)
   })
@@ -123,9 +130,31 @@ function showMessageOnScreen(data){
     li.innerText=`${data.username} : ${data.msg}`
     parentNode.appendChild(li);
 }
+
+
+async function groupsYouPresent(e){
+  try{
+  const group=document.getElementById('groups').value;
+  localStorage.setItem('groupname',group);
+  window.location.href="../groupchat/groupchat.html"
+  
+  }
+  catch(err){
+    console.log(err);
+  }
+    
+  
+}
+
+
+
+
 function redirectSignup(){
     window.location.href="../signup/signup.html"
 }
 function redirectlogin(){
     window.location.href="../login/login.html"
+}
+function redirectcreategroup(){
+  window.location.href="../creategroup/creategroup.html"
 }

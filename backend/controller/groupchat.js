@@ -2,13 +2,15 @@ const Chat=require('../model/chat');
 const User=require('../model/user');
 const sequelize=require('../util/database')
 const UserGroup=require('../model/usergroup')
+const Group=require('../model/group');
 
 
 const sendMessage=async (req,res)=>{
     const t = await sequelize.transaction();
     try{
-       const{msg}=req.body;
-      const chatDetails= await Chat.create({msg ,username:req.user.name, userId:req.user.id})
+       const{msg,groupname}=req.body;
+       const group=await Group.findOne({groupname});
+       const chatDetails= await Chat.create({msg ,username:req.user.name, userId:req.user.id,groupId:group.id});
        res.status(200).json({success:true , chatDetails});
        await t.commit();
     }
@@ -23,12 +25,10 @@ const sendMessage=async (req,res)=>{
 
 const showAllChat=async (req,res)=>{
     try{
-       const chat=await Chat.findAll();
-       res.status(200).json({chat});
-    //    chat.forEach(async (element)=> {
-    //     const user=await User.findByPk(element.userId);
-    //     //res.status(200).json({name:user.name ,mag:element});
-    //    });
+        const groupname=req.params.groupname;
+        const group= await Group.findOne({where:{groupname}});
+        const chat=await Chat.findAll({where:{groupId:group.id}});
+        res.status(200).json({chat});
        
     }
     catch(err){
@@ -37,21 +37,9 @@ const showAllChat=async (req,res)=>{
     }
 }
 
-const showGroups=async (req,res)=>{
-    try{
-    const groups=  await UserGroup.findAll({where:{userId:req.user.id}});
-    res.status(201).json({groups,success:true});
-    }
-    catch(err){
-        console.log(err);
-        res.status(500).json({error:err});
-    }
-}
-
 
 
 module.exports={
     sendMessage,
-    showAllChat,
-    showGroups
+    showAllChat
 }

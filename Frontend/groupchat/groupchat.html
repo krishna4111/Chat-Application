@@ -61,16 +61,38 @@
     </style>
 </head>
 <body>
+    
     <div class="hearder">
         <button id="btn-1" onclick="redirectSignup()" type="submit" class="btn btn-success btn-lg">signup</button>
         <button id="btn-2" onclick="redirectlogin()" type="submit" class="btn btn-success btn-lg">login</button>
         <h4 style="color: gold;text-align: center;" id="groupname"></h4>
-        <button style="float: right;margin-top: -80px;" id="btn-2" onclick="redirectaddmembers()" type="submit" class="btn btn-success btn-lg">Add Members</button>
+        <button style="float: right;margin-top: -80px;" id="addmember" onclick="redirectaddmembers()" type="submit" class="btn btn-success btn-lg">Add Members</button>
 
 
         </div>
+
+
+        <div class="user-groups">
+            <div style="margin-top: 20px;text-align: center;float: left;margin-left: 20px" id="makeadmine" class="user-group">
+                <lable class="form-lable" for="admine">Email address To make group admin</lable>
+                <input class="form-control" type="email" id="admine" required>
+                <div class="invalid-feedback">
+                    Please enter your email <address></address>
+                </div>
+              <button class="btn btn-primary" onclick="makeAdmine(event)">Make admine</button>
+            </div>
+            </div>
+            <div class="user-groups">
+                <div style="margin-top: 20px;text-align: center;float: left;" id="showUsers" class="user-group">
+                    <h3 style="margin-top: 140px;margin-left: -300px;" id="showuser">show user</h3>
+                    <ul style="margin-left: -400px;" id="showing">
+                    
+                    </ul>
+                </div>
+            </div>
+
         
-    <h1 style="text-align: center;" >Chat Here</h1>
+    <h1 style="text-align: center;margin-right: 180px;" >Chat Here</h1>
     <div class="container">
         <section class="section-1">
 
@@ -85,7 +107,7 @@
         </section>
         <div class="input-container">
             <input style="height:40px; border-radius: 15px;" id="msg-bar" class="input-field" type="text" placeholder="Type your message" required>
-            <button onclick="sendMessage()" class="send-button">Send</button>
+            <button onclick="sendMessage(event)" class="send-button">Send</button>
         </div>
     </div>
     <script src="../groupchat/groupchat.js"></script>

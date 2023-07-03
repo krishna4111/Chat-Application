@@ -38,16 +38,46 @@ addEventListener("DOMContentLoaded" ,async ()=>{
 let h4= document.getElementById('groupname');
 const groupname=localStorage.getItem('groupname');
 h4.innerHTML=`Group Name : ${groupname}`;
- console.log(h4)
- 
- console.log(groupname)
 
-    const token=localStorage.getItem('token');
-    const decodejwtToken=parseJwt(token);
-    
-    
-  const response =  await axios.get(`http://localhost:3000/groupchat/show-all/${groupname}`,{headers:{'Authorization':token}},groupname);
-console.log(response.data.showUsers);
+setInterval(async()=>{
+  const token=localStorage.getItem('token');
+  const decodejwtToken=parseJwt(token);
+  try{
+    const response =  await axios.get(`http://localhost:3000/groupchat/show-all/${groupname}`,{headers:{'Authorization':token}});
+    let array=new Array();
+    if(response.data.chat.length > 10){
+      let n=response.data.chat.length-1;
+      while(array.length <10){
+        array.push(response.data.chat[n]);
+        n--;
+      }
+    }
+    else{
+      array = response.data.chat.reverse();
+    }
+    array=array.reverse();
+    localStorage.setItem('chatArray' , JSON.stringify(array));
+  
+    let chat=JSON.parse(localStorage.getItem('chatArray'))
+    document.getElementById('ul-list').innerHTML = " ";
+  
+    chat.forEach(ele=>{
+      if(ele.userId === decodejwtToken.userId){
+        ele.username='you';
+    }
+    showMessageOnScreen(ele);
+    })
+  
+  }
+  catch(err){
+    console.log(err);
+  }
+
+},1000)
+   
+try{
+  const token=localStorage.getItem('token');
+  const response =  await axios.get(`http://localhost:3000/groupchat/show-all/${groupname}`,{headers:{'Authorization':token}});
   if(response.data.usergroup[0].isAdmine === false){
     document.getElementById("addmember").style.visibility="hidden";
     document.getElementById("makeadmine").style.visibility="hidden";
@@ -57,48 +87,30 @@ console.log(response.data.showUsers);
   else{
     showAllUsers();
   }
-  let array=new Array();
-  if(response.data.chat.length > 10){
-    let n=response.data.chat.length-1;
-    while(array.length <10){
-      array.push(response.data.chat[n]);
-      n--;
-    }
-  }
-  else{
-    array = response.data.chat.reverse();
-  }
-
-  array=array.reverse();
-  localStorage.setItem('chatArray' , JSON.stringify(array));
-
-  let chat=JSON.parse(localStorage.getItem('chatArray'))
-  document.getElementById('ul-list').innerHTML = " ";
-
-  chat.forEach(ele=>{
-    if(ele.userId === decodejwtToken.userId){
-      ele.username='you';
-  }
-  showMessageOnScreen(ele);
-  })
-
-
-  
- 
-
+}
+catch(err){
+  console.log(err);
+}
 })
+
+
 
 
 async function showAllUsers(){
   try{
-    console.log('i am inside')
     const token=localStorage.getItem('token');
     const groupname=localStorage.getItem('groupname')
   
     const response=await axios.get(`http://localhost:3000/groupchat/show-all-users/${groupname}`,{headers:{'Authorization':token}});
-    console.log(response.data);
+    console.log("users",response.data);
     response.data.getusers.forEach(user=>{
-      showUsers(user.name,user.userId)
+      if(user.isAdmine===true){
+        showAdmineUsers(user.name,user.userId);
+      }
+      else{
+        showUsers(user.name,user.userId)
+      }
+      
     })
     
   }
@@ -107,10 +119,23 @@ async function showAllUsers(){
   }
 
 }
+function showAdmineUsers(name,id){
+  const parentNode = document.getElementById("showing");
+  const createNewUser = `
+  <div>
+  <li style="margin-left: 110px;display:inline-block" id=${id}> Name : ${name} : 
+  <li style="color:green;display:inline-block">Admine</li>
+  <button style="padding:3px;margin:5px" onclick=removeUserFromGroup('${id}') class="btn btn-danger">Remove</button>
+  
+      </li>
+      </div>`;
+      
+      parentNode.innerHTML += createNewUser;
+}
 
 function showUsers(name,id){
   const parentNode = document.getElementById("showing");
-  const createNewUser = `<li style="margin-left: 110px;" id=${id}> Name : ${name} 
+  const createNewUser = `<li style="margin-left: 38px;" id=${id}> Name : ${name} 
   <button style="padding:3px;margin:5px" onclick=removeUserFromGroup('${id}') class="btn btn-danger">Remove</button>
   
       </li>`;

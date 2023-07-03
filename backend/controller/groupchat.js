@@ -10,9 +10,10 @@ const sendMessage=async (req,res)=>{
     try{
        const{msg,groupname}=req.body;
        const group=await Group.findOne({where:{groupname}});
-       const chatDetails= await Chat.create({msg ,username:req.user.name, userId:req.user.id,groupId:group.id});
-       res.status(200).json({success:true , chatDetails});
+       const chatDetails= await Chat.create({msg ,username:req.user.name, userId:req.user.id,groupId:group.id},{ transaction: t });
        await t.commit();
+       res.status(200).json({success:true , chatDetails});
+       
     }
     catch(err){
         console.log(err);
@@ -39,17 +40,20 @@ const showAllChat=async (req,res)=>{
 }
 
 const makeAdmine=async (req,res)=>{
+    const t = await sequelize.transaction();
     try{
         const{email,groupname}=req.body;
 
         const group=await Group.findOne({where:{groupname}});
         const user=await User.findOne({where:{email}});
         
-        const admine=await UserGroup.update({isAdmine:true},{where:{userId:user.id , groupId:group.id}});
+        const admine=await UserGroup.update({isAdmine:true},{where:{userId:user.id , groupId:group.id}},{ transaction: t });
+        await t.commit();
         res.status(201).json({success:true, message:`${user.name} is a admine now`})
     }
     catch(err){
         console.log(err);
+        await t.rollback();
         res.status(202).json({success:false,error:err});
     }
    
@@ -58,11 +62,9 @@ const makeAdmine=async (req,res)=>{
 const ShowAllUsers=async (req,res)=>{
     try{
         const groupname=req.params.groupname;
-    
         const group=await Group.findOne({where:{groupname}});
-        console.log
         const getusers=await UserGroup.findAll({
-            attributes:['name','userId'],
+            attributes:['name','userId','isAdmine'],
             where:{groupId:group.id}
         })
         res.status(200).json({getusers});
@@ -76,15 +78,18 @@ const ShowAllUsers=async (req,res)=>{
 
 }
 const removeUser=async (req,res)=>{
+    const t = await sequelize.transaction();
     try{
    const userId=req.params.userId;
    const groupname=req.params.groupname;
    const group=await Group.findOne({where:{groupname}});
-   const remove=await UserGroup.destroy({where:{groupId:group.id , userId:userId}});
+   const remove=await UserGroup.destroy({where:{groupId:group.id , userId:userId}},{transaction:t});
+   await t.commit();
    res.status(201).json({message:'user removed successfuly'});
     }
     catch(err){
      console.log(err);
+     await t.rollback();
      res.status(500).json({message:'somethig went wrong', error:err});
     }
 }

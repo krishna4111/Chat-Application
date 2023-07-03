@@ -11,10 +11,9 @@ function isStringValid(string) {
     }
 }
 const signup= async (req,res)=>{
+  const t=await sequelize.transaction();
 try{
-    console.log("i am here")
     const { name,mobile, email, password } = req.body;
-console.log(name,mobile,email,password);
   const registereduser= await User.findOne({where :{email}});
   if(registereduser){
     return res.status(200).json({message:"This email is already present so try login"});
@@ -28,7 +27,8 @@ console.log(name,mobile,email,password);
       }
       const saltrounds = 10;
       bcrypt.hash(password , saltrounds,async(err,hash)=>{
-        await User.create({ name,mobile,email,password: hash});
+        await User.create({ name,mobile,email,password: hash},{transaction:t});
+        await t.commit();
         res.status(201).json({ message: "successfully created new user" });
   
       })
@@ -36,6 +36,7 @@ console.log(name,mobile,email,password);
 }
 catch(err){
     console.log(err);
+    await t.rollback()
     res.status(500).json({error: err});
 
 }

@@ -9,14 +9,14 @@ const createGroup=async (req,res) => {
         const {groupname}=req.body;
         const creategroup= await Group.create({groupname} , {transaction:t});
          const usergroup=await UserGroup.create({groupname,name:req.user.name,isAdmine:true, groupId:creategroup.id, userId:req.user.id} ,{transaction:t});
-
+        await t.commit();
         res.status(200).json({creategroup , success:true , message:"group created successfulley"});
-        t.commit();
+        
    }
   
     catch(err){
         console.log(err);
-        t.rollback();
+        await t.rollback();
        return res.status(500).json({error:err});
     }
 }
@@ -29,13 +29,14 @@ const addmember=async (req,res)=>{
         const member=await User.findOne({where:{email}});
         const group=await  Group.findOne({where:{groupname}});
     
-        const usergroup=await UserGroup.create({groupname,name:member.name ,groupId:group.id,userId:member.id });
+        const usergroup=await UserGroup.create({groupname,name:member.name ,groupId:group.id,userId:member.id },{transaction:t});
+        await t.commit();
         res.status(201).json({ success:true , message:'member added onto this group successfully'});
-        t.commit();
+       
     }
     catch(err){
         console.log(err);
-        t.rollback();
+        await t.rollback();
         res.status(500).json({error:err});
     }
     

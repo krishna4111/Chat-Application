@@ -1,27 +1,4 @@
 
-async function sendMessage(){
-    try{
-        const token=localStorage.getItem('token');
-        const msg=document.getElementById('msg-bar').value;
-        obj={
-            msg
-        }
-      const response=  await axios.post('http://localhost:3000/chat/sendmessage',obj, {headers:{'Authorization' : token}});
-      
-      console.log("insert",response.data.chatDetails);
-      response.data.chatDetails.username='you';
-      showMessageOnScreen(response.data.chatDetails)
-      document.getElementById('msg-bar').value = "";
-     // location.reload();
-    }
-    catch(err){
-        console.log(err);
-    }
-   
-}
-
-
-
 function parseJwt (token) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -40,36 +17,6 @@ function parseJwt (token) {
 addEventListener("DOMContentLoaded" ,async ()=>{
  //const intervalId = setInterval(async () =>{
     const token=localStorage.getItem('token');
-    const decodejwtToken=parseJwt(token);
-    
-    
-  const response=  await axios.get("http://localhost:3000/chat/show-all",{headers:{'Authorization':token}});
-
-  
-  let array=new Array();
-  if(response.data.chat.length > 10){
-    let n=response.data.chat.length-1;
-    while(array.length <10){
-      array.push(response.data.chat[n]);
-      n--;
-    }
-  }
-  else{
-    array = response.data.chat.reverse();
-  }
-
-  array=array.reverse();
-  localStorage.setItem('chatArray' , JSON.stringify(array));
-
-  let chat=JSON.parse(localStorage.getItem('chatArray'))
-  document.getElementById('ul-list').innerHTML = " ";
-
-  chat.forEach(ele=>{
-    if(ele.userId === decodejwtToken.userId){
-      ele.username='you';
-  }
-  showMessageOnScreen(ele);
-  })
   
   const dropdown=document.getElementById('groups');
   dropdown.innerHTML='<option value="">SelectGroup</option>';

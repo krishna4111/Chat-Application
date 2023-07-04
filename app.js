@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const bodyPaer = require("body-parser");
+const path=require('path');
 const sequelize=require('./util/database');
 const UserRoutes=require('./router/userroutes');
 const ChatRoutes=require('./router/chatroutes');
@@ -33,6 +34,9 @@ User.belongsToMany(Group , {through : UserGroup});
 Group.hasMany(Chat);
 Chat.belongsTo(Group);
 
+app.use((req,res)=>{
+  res.sendFile(path.join(__dirname , `public/${req.url}`))
+})
 
 
 sequelize

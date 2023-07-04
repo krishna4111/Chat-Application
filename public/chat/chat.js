@@ -20,7 +20,7 @@ addEventListener("DOMContentLoaded" ,async ()=>{
   
   const dropdown=document.getElementById('groups');
   dropdown.innerHTML='<option value="">SelectGroup</option>';
-  const groups =  await axios.get('http://16.171.15.72:3000/chat/show-all-group' ,{headers:{'Authorization':token}})
+  const groups =  await axios.get('http://16.171.15.72:4000/chat/show-all-group' ,{headers:{'Authorization':token}})
 
   groups.data.groups.forEach(group=>{
     const option =document.createElement('option');
@@ -44,7 +44,7 @@ addEventListener("DOMContentLoaded" ,async ()=>{
 //       const decodejwtToken = parseJwt(token);
 //       console.log('decodejwtToken', decodejwtToken)
       
-//       const response = await axios.get("http://16.171.15.72:3000/chat/show-all", { headers: { 'Authorization': token } });
+//       const response = await axios.get("http://16.171.15.72:4000/chat/show-all", { headers: { 'Authorization': token } });
 //       console.log('show all', response.data);
 //       document.getElementById('msg-bar').value = "";
 //       response.data.chat.forEach(ele => {

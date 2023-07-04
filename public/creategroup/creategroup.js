@@ -7,7 +7,7 @@ async function creategroup(e){
         const obj={
          groupname
         }
-       const response= await axios.post('http://16.171.15.72:3000/group/create-group' , obj , { headers : { 'Authorization' : token } } );
+       const response= await axios.post('http://16.171.15.72:4000/group/create-group' , obj , { headers : { 'Authorization' : token } } );
         console.log(response.data);
        if(response.data.success === true){
         localStorage.setItem('groupname' , response.data.creategroup.groupname)

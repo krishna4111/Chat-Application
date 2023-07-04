@@ -1,6 +1,7 @@
 const User=require('../model/user');
 const bcrypt=require('bcrypt');
 const jwt=require('jsonwebtoken');
+const sequelize=require('../util/database');
 
 
 function isStringValid(string) {

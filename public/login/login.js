@@ -7,7 +7,7 @@ async function loginEvent(e){
         const obj={
             email,password
         }
-        const check=await axios.post('http://16.171.15.72:4000/user/login',obj)
+        const check=await axios.post('http://localhost:3000/user/login',obj)
         alert(check.data.message);
         localStorage.setItem("token",check.data.token);
         window.location.href="../chat/chat.html"

@@ -1,3 +1,21 @@
+
+const socket = io('http://localhost:3000/');
+
+
+socket.on('connect', () => {
+    console.log(socket.id);
+});
+
+
+socket.on('receive', (message )=> {
+    console.log("message>>>>>>>>>>>>>>>",message);
+   showMessageOnScreen(message)
+})
+
+
+
+
+
 async function sendMessage(e){
     try{
       e.preventDefault();
@@ -9,13 +27,18 @@ async function sendMessage(e){
             msg,
             groupname
         }
-      const response = await axios.post('http://16.171.15.72:4000/groupchat/sendmessage',obj, {headers:{'Authorization' : token}});
-      
-      console.log("insert",response.data.chatDetails);
-      response.data.chatDetails.username='you';
-      showMessageOnScreen(response.data.chatDetails)
+      const response = await axios.post('http://localhost:3000/groupchat/sendmessage',obj, {headers:{'Authorization' : token}});
+      const username= response.data.chatDetails.username;
+      obj2={
+        msg,
+        username
+      }
+      socket.emit('send-message', obj2);
+      // console.log("insert",response.data.chatDetails);
+      //response.data.chatDetails.username='you';
+    //showMessageOnScreen(response.data.chatDetails)
       document.getElementById('msg-bar').value = "";
-     location.reload();
+     //location.reload();
     }
     catch(err){
         console.log(err);
@@ -39,11 +62,11 @@ let h4= document.getElementById('groupname');
 const groupname=localStorage.getItem('groupname');
 h4.innerHTML=`Group Name : ${groupname}`;
 
-setInterval(async()=>{
+//setInterval(async()=>{
   const token=localStorage.getItem('token');
   const decodejwtToken=parseJwt(token);
   try{
-    const response =  await axios.get(`http://16.171.15.72:4000/groupchat/show-all/${groupname}`,{headers:{'Authorization':token}});
+    const response =  await axios.get(`http://localhost:3000/groupchat/show-all/${groupname}`,{headers:{'Authorization':token}});
     let array=new Array();
     if(response.data.chat.length > 10){
       let n=response.data.chat.length-1;
@@ -73,11 +96,11 @@ setInterval(async()=>{
     console.log(err);
   }
 
-},1000)
+//},1000)
    
 try{
   const token=localStorage.getItem('token');
-  const response =  await axios.get(`http://16.171.15.72:4000/groupchat/show-all/${groupname}`,{headers:{'Authorization':token}});
+  const response =  await axios.get(`http://localhost:3000/groupchat/show-all/${groupname}`,{headers:{'Authorization':token}});
   if(response.data.usergroup[0].isAdmine === false){
     document.getElementById("addmember").style.visibility="hidden";
     document.getElementById("makeadmine").style.visibility="hidden";
@@ -101,7 +124,7 @@ async function showAllUsers(){
     const token=localStorage.getItem('token');
     const groupname=localStorage.getItem('groupname')
   
-    const response=await axios.get(`http://16.171.15.72:4000/groupchat/show-all-users/${groupname}`,{headers:{'Authorization':token}});
+    const response=await axios.get(`http://localhost:3000/groupchat/show-all-users/${groupname}`,{headers:{'Authorization':token}});
     console.log("users",response.data);
     response.data.getusers.forEach(user=>{
       if(user.isAdmine===true){
@@ -146,7 +169,7 @@ async function removeUserFromGroup(userId) {
   try{
     const groupname=localStorage.getItem('groupname');
     const token = localStorage.getItem("token");
-    await axios.delete(`http://16.171.15.72:4000/groupchat/remove-user/${userId}/${groupname}`, { headers: { 'Authorization': token } })
+    await axios.delete(`http://localhost:3000/groupchat/remove-user/${userId}/${groupname}`, { headers: { 'Authorization': token } })
       
         removeItemFromScreen(userId);
         location.reload();
@@ -179,7 +202,7 @@ async function makeAdmine(e){
       email,
       groupname
     }
-  const admin=  await axios.post('http://16.171.15.72:4000/groupchat/made-admine',obj,{headers:{'Authorization':token}})
+  const admin=  await axios.post('http://localhost:3000/groupchat/made-admine',obj,{headers:{'Authorization':token}})
   alert(admin.data.message);
   location.reload();
 

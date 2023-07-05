@@ -9,7 +9,7 @@ console.log(email,groupname)
         email,
         groupname
       }
-     const member= await axios.post('http://16.171.15.72:4000/group/add-member',obj,{headers:{'Authorization' : token}});
+     const member= await axios.post('http://localhost:3000/group/add-member',obj,{headers:{'Authorization' : token}});
       alert(member.data.message);
      window.location.href="../groupchat/groupchat.html"
     }

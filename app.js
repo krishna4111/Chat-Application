@@ -13,6 +13,16 @@ const Chat=require('./model/chat');
 const Group=require('./model/group');
 const UserGroup=require('./model/usergroup');
 
+
+const http = require('http');
+const server = http.createServer(app)
+const socketio = require('socket.io')
+const io = socketio(server, {
+  cors: {
+    origin: '*'
+  }
+})
+
 app.use(bodyPaer.json());
 app.use(cors({
    origin:"*",
@@ -24,6 +34,22 @@ app.use('/user',UserRoutes);
 app.use('/chat',ChatRoutes);
 app.use('/group',GroupRoutes);
 app.use('/groupchat',GroupChat);
+
+
+io.on('connection' , socket =>{
+  socket.on('send-message' , (message)=>{
+    console.log('message>>>>',message);
+    io.emit('receive',message);
+    
+  })
+
+  socket.on('group-message', (message) => {
+    io.emit('receive', message);
+    console.log("message>>>>>>>>>>>>>>>>>>>>",message);
+  })
+})
+
+
 
 User.hasMany(Chat);
 Chat.belongsTo(User);
@@ -43,7 +69,8 @@ sequelize
  //.sync({ force: true })
  .sync()
   .then((result) => {
-    app.listen(4000);
+    //app.listen(3000);
+    server.listen(3000);
   })
   .catch((err) => {
     console.log(err);

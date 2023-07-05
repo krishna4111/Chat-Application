@@ -106,9 +106,19 @@
 
         </section>
         <div class="input-container">
-            <input style="height:40px; border-radius: 15px;" id="msg-bar" class="input-field" type="text" placeholder="Type your message" required>
-            <button onclick="sendMessage(event)" class="send-button">Send</button>
+            <div style="display: block;">
+                <form id="formElem" >
+                    <input type="file" name="file" id="sendFile">
+                    <button style="    height: 35px;" type="submit" class="btn btn-primary ">send file</button>
+                </form>
+            </div>
+            <div style="display: block;">
+                <input style="height:40px; border-radius: 15px;" id="msg-bar" class="input-field" type="text" placeholder="Type your message" required>
+                <button onclick="sendMessage(event)" class="send-button">Send</button>
+    
+            </div>
         </div>
+        
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.1/socket.io.js"></script>
     <script src="/socket.io/socket.io.js"></script>

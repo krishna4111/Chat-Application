@@ -1,9 +1,11 @@
 
+const formFile = document.getElementById('formElem')
+
 const socket = io('http://localhost:3000/');
 
 
 socket.on('connect', () => {
-    console.log(socket.id);
+    //console.log(socket.id);
 });
 
 
@@ -24,10 +26,9 @@ async function sendMessage(e){
         const groupname=localStorage.getItem('groupname');
         console.log('i am groupname',groupname)
         obj={
-            msg,
-            groupname
+            msg
         }
-      const response = await axios.post('http://localhost:3000/groupchat/sendmessage',obj, {headers:{'Authorization' : token}});
+      const response = await axios.post(`http://localhost:3000/groupchat/sendmessage/${groupname}`,obj, {headers:{'Authorization' : token}});
       const username= response.data.chatDetails.username;
       obj2={
         msg,
@@ -222,6 +223,7 @@ function showMessageOnScreen(data){
     const parentNode=document.getElementById('ul-list');
     const li=document.createElement('li');
     li.setAttribute("class" , "list-group-item");
+    li.setAttribute("style","white-space: nowrap;overflow: hidden;text-overflow: ellipsis;")
     li.innerText=`${data.username} : ${data.msg}`
     parentNode.appendChild(li);
 }
@@ -231,4 +233,43 @@ function redirectSignup(){
 }
 function redirectlogin(){
     window.location.href="../login/login.html"
+}
+
+
+formFile.addEventListener('submit', onsubmitfile);
+
+async function onsubmitfile(event) {
+    try {
+        event.preventDefault();
+        const groupname=localStorage.getItem('groupname');
+
+        formData = new FormData(formFile);
+
+        const token = localStorage.getItem('token');
+
+        console.log("formData>>>>>>>>>>",formData);
+
+        // for (item of formData) {
+        //     console.log("item[1]>>>>>>>>>>",item[1]);
+        //     console.log("item[1]>File>>>>>>>>>>",item[1].File);
+        // }
+
+        const response = await axios.post(`http://localhost:3000/file/sendfile/${groupname}`, formData, { headers: { 'Authorization': token, "Content-Type": "multipart/form-data" } });
+        const username=response.data.username;
+        obj2={
+          formData,
+          username
+        }
+        
+        socket.emit('send-message', obj2);
+
+        // console.log(response.data);
+        document.getElementById('sendFile').value = null;
+        window.location.reload
+        //showMyMessageOnScreen(responce.data.data);
+    } catch (error) {
+
+        console.log(error);
+
+    }
 }

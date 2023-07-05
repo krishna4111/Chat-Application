@@ -8,7 +8,8 @@ const Group=require('../model/group');
 const sendMessage=async (req,res)=>{
     const t = await sequelize.transaction();
     try{
-       const{msg,groupname}=req.body;
+        const groupname=req.params.groupname;
+       const{msg}=req.body;
        const group=await Group.findOne({where:{groupname}});
        const chatDetails= await Chat.create({msg ,username:req.user.name, userId:req.user.id,groupId:group.id},{ transaction: t });
        await t.commit();

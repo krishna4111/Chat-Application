@@ -12,6 +12,7 @@ const User=require('./model/user');
 const Chat=require('./model/chat');
 const Group=require('./model/group');
 const UserGroup=require('./model/usergroup');
+const MultiMediaRouter=require('./router/multimediachat');
 
 
 const http = require('http');
@@ -34,6 +35,7 @@ app.use('/user',UserRoutes);
 app.use('/chat',ChatRoutes);
 app.use('/group',GroupRoutes);
 app.use('/groupchat',GroupChat);
+app.use('/file',MultiMediaRouter)
 
 
 io.on('connection' , socket =>{
@@ -41,11 +43,6 @@ io.on('connection' , socket =>{
     console.log('message>>>>',message);
     io.emit('receive',message);
     
-  })
-
-  socket.on('group-message', (message) => {
-    io.emit('receive', message);
-    console.log("message>>>>>>>>>>>>>>>>>>>>",message);
   })
 })
 

@@ -13,6 +13,7 @@ const Chat=require('./model/chat');
 const Group=require('./model/group');
 const UserGroup=require('./model/usergroup');
 const MultiMediaRouter=require('./router/multimediachat');
+const ArchiveChat=require('./controller/archiveChat');
 
 
 const http = require('http');
@@ -24,7 +25,10 @@ const io = socketio(server, {
   }
 })
 
+app.use(ArchiveChat.job());
 app.use(bodyPaer.json());
+
+
 app.use(cors({
    origin:"*",
    credentials:true,

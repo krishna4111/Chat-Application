@@ -39,7 +39,7 @@ async function sendMessage(e){
       //response.data.chatDetails.username='you';
     //showMessageOnScreen(response.data.chatDetails)
       document.getElementById('msg-bar').value = "";
-     //location.reload();
+     location.reload();
     }
     catch(err){
         console.log(err);
@@ -255,17 +255,17 @@ async function onsubmitfile(event) {
         // }
 
         const response = await axios.post(`http://localhost:3000/file/sendfile/${groupname}`, formData, { headers: { 'Authorization': token, "Content-Type": "multipart/form-data" } });
-        const username=response.data.username;
-        obj2={
-          formData,
-          username
-        }
+        //const username=response.data.username;
+        // obj2={
+        //   formData,
+        //   username
+        // }
         
-        socket.emit('send-message', obj2);
+        //socket.emit('send-message', obj2);
 
         // console.log(response.data);
         document.getElementById('sendFile').value = null;
-        window.location.reload
+       location.reload();
         //showMyMessageOnScreen(responce.data.data);
     } catch (error) {
 
